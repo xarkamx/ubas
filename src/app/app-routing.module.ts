@@ -5,11 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestComponent } from './theme/layouts/guest/guest.component';
+import { JWTStorage } from './services/JWTStorage';
 
-const routes: Routes = [
+const routes = [
   {
     path: '',
     component: AdminComponent,
+    loginRequired: true,
     children: [
       {
         path: '',
@@ -39,6 +41,11 @@ const routes: Routes = [
     component: GuestComponent,
     children: [
       {
+        path:'',
+        redirectTo: !isLoggedIn()? '/login':'',
+        pathMatch: 'full'
+      },
+      {
         path: 'login',
         loadComponent: () => import('./demo/authentication/login/login.component')
       },
@@ -50,8 +57,27 @@ const routes: Routes = [
   }
 ];
 
+function isLoggedIn() {
+  const jwt = new JWTStorage();
+  return Boolean(jwt.getToken());
+}
+
+function filterRoutes(routes): Routes {
+  const jwt =new JWTStorage();
+  const token = jwt.getToken();
+  return routes.filter((route) => {
+   return route.loginRequired ? Boolean(token) : true;
+  }).map((route) => {
+    return {
+      path: route.path,
+      component: route.component,
+      children: route.children
+    }
+  })
+}
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(filterRoutes(routes))],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -110,3 +110,12 @@ form i {
   top: 203px;
   right: 45px;
 }
+
+::ng-deep app-modal {
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+}

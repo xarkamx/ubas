@@ -1,0 +1,11 @@
+
+<div *ngIf="open" class='fadeIn'>
+<div class='background' (click)="onCloseModal()"></div>
+<div class='container'>
+<app-fa-icon icon="fa-times" type='close' (click)="onCloseModal()" size='1'></app-fa-icon>
+<app-card cardTitle={{title}} blockClass="pc-component">
+  <app-fa-icon icon="fa-exclamation-triangle" className='modalCenterIcon' type="error" size=3></app-fa-icon>
+  <ng-content></ng-content>
+</app-card>
+</div>
+</div>
